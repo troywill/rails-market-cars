@@ -1,0 +1,210 @@
+* Introduction
+* Step by Step
+  1. [X] create a new rails application
+     #+BEGIN_SRC sh :tangle scripts/010_create_new_rails_application.sh
+       rails new cars --database postgresql
+     #+END_SRC
+  2. [X] Enable a JavaScript runtime in [[file:Gemfile][Gemfile]]
+     
+     You probably got a 'Could not find a JavaScript runtime.' message from the
+     'rake about' command. Open [[file:../Gemfile][Gemfile]] with your text editor and enable 'therubyracer.'
+     
+     #+BEGIN_SRC ruby
+       # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+       gem 'therubyracer', platforms: :ruby
+     #+END_SRC
+     
+     You might open [[file:../Gemfile][Gemfile]] with Emacs, Vi, [[http://macromates.com/][TextMate]], etc. this way:
+     #+BEGIN_EXAMPLE
+       textmate ../../Gemfile
+     #+END_EXAMPLE
+  3. [X] Examine your Rails installation
+     #+BEGIN_SRC sh
+       rake about
+     #+END_SRC
+  4. [X] generate a home controller
+     #+BEGIN_SRC sh :tangle scripts/020_controller_home.sh
+       rails generate controller home index login logout --skip-stylesheets
+     #+END_SRC
+  5. [X] Set the default route to home/index in [[file:config/routes.rb][config/routes.rb]]
+     
+     Open [[file:config/routes.rb][config/routes.rb]]  with your text editor. You will see the following
+     commented line near the top of the file:
+     #+BEGIN_SRC ruby
+       # root 'welcome#index'
+     #+END_SRC
+     
+     Let's uncomment and change the application root view:
+
+     #+BEGIN_SRC ruby
+       root "home#index"
+     #+END_SRC
+     
+     Now, Rails will direct vistors to the application to home/index. We are
+     ready to start the Rails application and incorporate Twitter Bootstrap's
+     stylesheets and JavaScript scripts.
+  6. [X] Enable [[http://rubygems.org/gems/bootstrap-sass][bootstrap-sass]] in [[file:Gemfile][Gemfile]]
+     #+BEGIN_SRC ruby
+       # See http://rubygems.org/gems/bootstrap-sass (July 2014)
+       gem "bootstrap-sass", "~> 3.2.0.0"
+     #+END_SRC
+  7. [X] bundle install
+  8. [X] Remove the app/assets/stylesheets/application.css file
+  9. [X] Create a new [[file:app/assets/stylesheets/application.css.scss][app/assets/stylesheets/application.css.scss]] file
+     #+BEGIN_SRC css
+       @import "bootstrap";
+       body { padding-top: 60px; }
+     #+END_SRC
+  10. [X] Import bootstrap javascript in [[file:app/assets/javascripts/application.js][app/assets/javascripts/application.js]]
+      #+BEGIN_SRC js
+	//= require jquery
+	//= require jquery_ujs
+	//= require turbolinks
+	//= require_tree .
+	//
+	// The following line Loads all Bootstrap javascripts
+	// = require bootstrap
+      #+END_SRC
+  11. [X] Overwrite app/views/layouts/application.html.erb with starter-template.html.erb]] 
+     
+      [[file:app/views/layouts/starter-template.html.erb][starter-template.html.erb]] is Twitter Bootstrap's [[https://github.com/twitter/bootstrap/blob/master/docs/examples/starter-template.html][starter template]] example merged
+      with the default [[file:app/views/layouts/application.html.erb][app/views/layouts/application.html.erb]] file that Rails generates.
+     
+      Here's the resulting [[file:app/views/layouts/application.html.erb]]:
+      #+BEGIN_SRC html :tangle /tmp/application.html.erb :padline no
+        <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta name="description" content="">
+            <meta name="author" content="">
+            
+            <link rel="icon" href="../../favicon.ico">
+            
+            <title>Bootstrap starter template</title>
+            <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+            <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+            <%= csrf_meta_tags %>
+            <style>
+              body {
+              padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+              }
+            </style>  
+          </head>
+          
+          <body>
+            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+              <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="#">Project name</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                  <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                  </ul>
+                </div><!--/.nav-collapse -->
+              </div>
+            </div>
+            
+            <div class="container">
+              
+              <h1>Bootstrap starter template</h1>
+              <p>Use this document as a way to quick start any new project.<br> All you get is this message and a barebones HTML document.</p>
+              <%= yield %>
+              
+            </div> <!-- /container -->
+            
+          </body>
+        </html>
+
+      #+END_SRC
+
+      The starter example layout uses a fixed width layout, which is introduced at [[http://twitter.github.io/bootstrap/scaffolding.html#layouts][scaffolding.html#layouts]].
+  12. [X] template: template0
+  13. [X] rake db:create
+  14. [X] rake db:migrate
+  15. [X] Enable `devise` gem in [[file:../Gemfile][Gemfile]]
+      #+BEGIN_SRC conf
+	gem 'devise', '~> 3.2.4' # Fri Jun 27 08:32:06 PDT 2014, Rails 4.1.1
+     #+END_SRC
+  16. [X] Run the Devise gem install generator
+      #+BEGIN_SRC sh
+	rails generate devise:install
+      #+END_SRC
+  17. [ ] Generate a User Model and generate routes for user activities
+      #+BEGIN_SRC sh
+	rails generate devise User
+      #+END_SRC
+  18. [ ] Run the devise_create_users database migration the was created by in the previous command
+      #+BEGIN_SRC sh
+	rake db:migrate
+      #+END_SRC
+  19. [ ] (Re)start the Rails server
+      #+BEGIN_SRC 
+	kill -USR1 `cat ../tmp/pids/server.pid `; rails server --daemon
+      #+END_SRC
+  20. [ ] Place sign up and sign out links on the home page file:../app/views/home/index.html.erb
+      #+BEGIN_SRC html :tangle /tmp/home_index.html.erb :padline no
+	<h1>Home#index</h1>
+	<%= Time.now %>
+	<li><%= link_to "Sign Up", new_user_registration_path %></li>
+	<li><%= link_to "Sign In", new_user_session_path %></li>
+	<li><%= link_to "Sign Out", destroy_user_session_path, :method => 'delete' %></li>
+       
+	<% if user_signed_in? %>
+	You are signed in, current_user.id = <%= current_user.id %><br />
+	user_session.keys => <%= user_session.keys %>
+	<% end %>
+      #+END_SRC
+      - To verify if a user is signed in, use the following helper: user_signed_in?
+      - See https://github.com/plataformatec/devise#controller-filters-and-helpers
+      - file:../app/views/home/index.html.erb
+      - For the current signed-in user, this helper is available: current_user
+  21. [X] ad scaffold
+      #+BEGIN_SRC sh :tangle scripts/generate_scaffold_ad.sh
+        # <troydwill@gmail.com> July, 2014
+
+        MODEL="ad"
+
+        rails generate scaffold $MODEL \
+            user_id:integer \
+            year:integer \
+            model_id:integer \
+            mileage:integer \
+            isforsale:boolean \
+            isdealer:boolean \
+            color_id:integer \
+            city_id:integer \
+            ad_url:string \
+            ad_date:date \
+            ad_price:integer \
+            contact_name:string \
+            contact_phone:string \
+            contact_email:string \
+            contact_log:text \
+            notes:text
+        }
+      #+END_SRC
+  22. [X] app/models/ad.rb
+      #+BEGIN_SRC ruby :tangle /tmp/ad.rb
+        validates :year, :presence => true, :numericality => true
+        validates :user_id, :presence => true, :numericality => true
+        validates :model_id, :presence => true, :numericality => true
+        belongs_to :user
+        belongs_to :model
+        belongs_to :city
+        belongs_to :color
+      #+END_SRC
+  23. [X] rake db:migrate
+  24. 
+      
+      
