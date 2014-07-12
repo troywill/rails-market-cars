@@ -1,10 +1,11 @@
 * Introduction
 * Step by Step
-  1. [X] create a new rails application
-     #+BEGIN_SRC sh :tangle scripts/010_create_new_rails_application.sh
+  1. [ ] create a new rails application
+     #+BEGIN_SRC sh :tangle bin/010_create_new_rails_application.sh
        rails new cars --database postgresql
      #+END_SRC
-  2. [X] Enable a JavaScript runtime in [[file:Gemfile][Gemfile]]
+  2. [ ] Copy this rails-markets-cars.org file into cars/
+  3. [ ] Enable a JavaScript runtime in [[file:Gemfile][Gemfile]]
      
      You probably got a 'Could not find a JavaScript runtime.' message from the
      'rake about' command. Open [[file:../Gemfile][Gemfile]] with your text editor and enable 'therubyracer.'
@@ -18,15 +19,23 @@
      #+BEGIN_EXAMPLE
        textmate ../../Gemfile
      #+END_EXAMPLE
-  3. [X] Examine your Rails installation
+  4. [ ] Examine your Rails installation
      #+BEGIN_SRC sh
        rake about
      #+END_SRC
-  4. [X] generate a home controller
-     #+BEGIN_SRC sh :tangle scripts/020_controller_home.sh
+  5. [ ] file:config/database.yml
+     #+BEGIN_SRC conf
+       template: template0
+     #+END_SRC
+  6. [ ] rake db:create
+     #+BEGIN_SRC sh
+       rake db:create
+     #+END_SRC
+  7. [ ] generate a home controller
+     #+BEGIN_SRC sh :tangle bin/020_controller_home.sh :shebang #!/bin/sh
        rails generate controller home index login logout --skip-stylesheets
      #+END_SRC
-  5. [X] Set the default route to home/index in [[file:config/routes.rb][config/routes.rb]]
+  8. [ ] Set the default route to home/index in [[file:config/routes.rb][config/routes.rb]]
      
      Open [[file:config/routes.rb][config/routes.rb]]  with your text editor. You will see the following
      commented line near the top of the file:
@@ -43,19 +52,22 @@
      Now, Rails will direct vistors to the application to home/index. We are
      ready to start the Rails application and incorporate Twitter Bootstrap's
      stylesheets and JavaScript scripts.
-  6. [X] Enable [[http://rubygems.org/gems/bootstrap-sass][bootstrap-sass]] in [[file:Gemfile][Gemfile]]
+  9. [ ] Enable [[http://rubygems.org/gems/bootstrap-sass][bootstrap-sass]] in [[file:Gemfile][Gemfile]]
      #+BEGIN_SRC ruby
        # See http://rubygems.org/gems/bootstrap-sass (July 2014)
        gem "bootstrap-sass", "~> 3.2.0.0"
      #+END_SRC
-  7. [X] bundle install
-  8. [X] Remove the app/assets/stylesheets/application.css file
-  9. [X] Create a new [[file:app/assets/stylesheets/application.css.scss][app/assets/stylesheets/application.css.scss]] file
-     #+BEGIN_SRC css
-       @import "bootstrap";
-       body { padding-top: 60px; }
-     #+END_SRC
-  10. [X] Import bootstrap javascript in [[file:app/assets/javascripts/application.js][app/assets/javascripts/application.js]]
+  10. [ ] bundle install
+  11. [ ] Remove the app/assets/stylesheets/application.css file
+      #+BEGIN_SRC sh
+        rm app/assets/stylesheets/application.css file
+      #+END_SRC
+  12. [ ] Create a new [[file:app/assets/stylesheets/application.css.scss][app/assets/stylesheets/application.css.scss]] file
+      #+BEGIN_SRC css
+	@import "bootstrap";
+	body { padding-top: 60px; }
+      #+END_SRC
+  13. [ ] Import bootstrap javascript in [[file:app/assets/javascripts/application.js][app/assets/javascripts/application.js]]
       #+BEGIN_SRC js
 	//= require jquery
 	//= require jquery_ujs
@@ -65,13 +77,13 @@
 	// The following line Loads all Bootstrap javascripts
 	// = require bootstrap
       #+END_SRC
-  11. [X] Overwrite app/views/layouts/application.html.erb with starter-template.html.erb]] 
+  14. [ ] Overwrite app/views/layouts/application.html.erb with starter-template.html.erb
      
-      [[file:app/views/layouts/starter-template.html.erb][starter-template.html.erb]] is Twitter Bootstrap's [[https://github.com/twitter/bootstrap/blob/master/docs/examples/starter-template.html][starter template]] example merged
-      with the default [[file:app/views/layouts/application.html.erb][app/views/layouts/application.html.erb]] file that Rails generates.
+      starter-template.html.erb is Twitter Bootstrap's example merged
+      with the default app/views/layouts/application.html.erb file that Rails generates.
      
       Here's the resulting [[file:app/views/layouts/application.html.erb]]:
-      #+BEGIN_SRC html :tangle /tmp/application.html.erb :padline no
+      #+BEGIN_SRC html :tangle app/views/layouts/application.html.erb :padline no
         <html lang="en">
           <head>
             <meta charset="utf-8">
@@ -117,8 +129,6 @@
             
             <div class="container">
               
-              <h1>Bootstrap starter template</h1>
-              <p>Use this document as a way to quick start any new project.<br> All you get is this message and a barebones HTML document.</p>
               <%= yield %>
               
             </div> <!-- /container -->
@@ -129,14 +139,16 @@
       #+END_SRC
 
       The starter example layout uses a fixed width layout, which is introduced at [[http://twitter.github.io/bootstrap/scaffolding.html#layouts][scaffolding.html#layouts]].
-  12. [X] template: template0
-  13. [X] rake db:create
-  14. [X] rake db:migrate
-  15. [X] Enable `devise` gem in [[file:../Gemfile][Gemfile]]
-      #+BEGIN_SRC conf
-	gem 'devise', '~> 3.2.4' # Fri Jun 27 08:32:06 PDT 2014, Rails 4.1.1
-     #+END_SRC
-  16. [X] Run the Devise gem install generator
+  15. [ ] Enable `devise` gem in [[file:Gemfile][Gemfile]]
+      1. [ ] Edit [[file:Gemfile][Gemfile]]
+	 #+BEGIN_SRC ruby
+	   gem 'devise', '~> 3.2.4' # July 2014, Rails 4.1.1
+         #+END_SRC
+      2. [ ] run bundle install
+	 #+BEGIN_SRC sh
+           bundle install
+         #+END_SRC
+  16. [ ] Run the Devise gem install generator
       #+BEGIN_SRC sh
 	rails generate devise:install
       #+END_SRC
@@ -150,9 +162,9 @@
       #+END_SRC
   19. [ ] (Re)start the Rails server
       #+BEGIN_SRC 
-	kill -USR1 `cat ../tmp/pids/server.pid `; rails server --daemon
+	kill -USR1 `cat tmp/pids/server.pid `; rails server --daemon
       #+END_SRC
-  20. [ ] Place sign up and sign out links on the home page file:../app/views/home/index.html.erb
+  20. [ ] Place sign up and sign out links on the home page file:app/views/home/index.html.erb
       #+BEGIN_SRC html :tangle /tmp/home_index.html.erb :padline no
 	<h1>Home#index</h1>
 	<%= Time.now %>
@@ -169,8 +181,8 @@
       - See https://github.com/plataformatec/devise#controller-filters-and-helpers
       - file:../app/views/home/index.html.erb
       - For the current signed-in user, this helper is available: current_user
-  21. [X] ad scaffold
-      #+BEGIN_SRC sh :tangle scripts/generate_scaffold_ad.sh
+  21. [ ] ad scaffold
+      #+BEGIN_SRC sh :tangle bin/generate_scaffold_ad.sh :shebang #!/bin/sh
         # <troydwill@gmail.com> July, 2014
 
         MODEL="ad"
@@ -191,10 +203,10 @@
             contact_phone:string \
             contact_email:string \
             contact_log:text \
-            notes:text
-        }
+            notes:text \
+            --skip-stylesheets
       #+END_SRC
-  22. [X] app/models/ad.rb
+  22. [ ] file:app/models/ad.rb
       #+BEGIN_SRC ruby :tangle /tmp/ad.rb
         validates :year, :presence => true, :numericality => true
         validates :user_id, :presence => true, :numericality => true
@@ -204,7 +216,126 @@
         belongs_to :city
         belongs_to :color
       #+END_SRC
-  23. [X] rake db:migrate
-  24. 
-      
-      
+  23. [ ] rake db:migrate
+  24. [ ] colors
+      1. [ ] scaffold
+	 #+BEGIN_SRC sh
+           rails generate scaffold color name:string --skip-stylesheets
+         #+END_SRC
+      2. [ ] file:app/models/color.rb
+	 #+BEGIN_SRC ruby
+	   validates :name, :presence => true, :uniqueness => true
+	 #+END_SRC
+      3. [ ] rake db:migrate
+      4. [ ] file:app/views/ads/_form.html.erb
+	 #+BEGIN_SRC html
+           <%= select("ad", "color_id", Color.all.collect { |p| [p.name, p.id]}) %>
+	 #+END_SRC
+  25. [-] models
+      1. [ ] scaffold
+	 #+BEGIN_SRC sh :tangle bin/generate_scaffold_model.sh :shebang #!/bin/sh	 
+           rails generate scaffold model \
+                   user_id:integer \
+                   make_id:integer \
+                   name:string \
+                   image_url:string \
+                   wikipedia:string \
+                   url:string \
+                   --skip-stylesheets
+	 #+END_SRC
+      2. [ ] file:app/models/model.rb
+	 #+BEGIN_SRC ruby
+           validates :user_id, :presence => true, :numericality => true
+           validates :make_id, :presence => true, :numericality => true
+           validates :name, :presence => true
+           belongs_to :make
+	 #+END_SRC
+      3. [ ] rake db:migrate
+      4. [ ] file:app/views/ads/_form.html.erb
+	 #+BEGIN_SRC html
+           <%= select("ad", "model_id", Model.all.collect { |p| [p.name, p.id]}) %>
+	 #+END_SRC
+      4. [ ] file:app/views/models/_form.html.erb
+	 #+BEGIN_SRC html
+           <%= select("model", "make_id", Make.all.collect { |p| [p.name, p.id]}) %>
+	 #+END_SRC
+  26. [-] makes
+      1. [ ] scaffold
+	 #+BEGIN_SRC sh :tangle bin/generate_scaffold_make.sh :shebang #!/bin/sh	 
+           rails generate scaffold make \
+                   user_id:integer \
+                   name:string \
+                   url:string \
+                   --skip-stylesheets
+	 #+END_SRC
+      2. [ ] file:app/models/make.rb
+	 #+BEGIN_SRC ruby
+           validates :user_id, :presence => true, :numericality => true
+           validates :name, :presence => true, :uniqueness => true
+           has_many :models
+	 #+END_SRC
+      3. [ ] rake db:migrate
+      4. [ ] file:app/views/models/_form.html.erb
+	 #+BEGIN_SRC html
+           <%= select("ad", "make_id", Make.all.collect { |p| [p.name, p.id]}) %>
+	 #+END_SRC
+  27. [ ] cities
+      1. [ ] scaffold
+	 #+BEGIN_SRC sh :tangle bin/generate_scaffold_city.sh :shebang #!/bin/sh	 
+           rails generate scaffold city \
+                   name:string \
+                   --skip-stylesheets
+	 #+END_SRC
+      2. [ ] file:app/models/city.rb
+	 #+BEGIN_SRC ruby
+           validates :name, :presence => true, :uniqueness => true
+           has_many :ads
+	 #+END_SRC
+      3. [ ] rake db:migrate
+      4. [ ] file:app/views/ads/_form.html.erb
+	 #+BEGIN_SRC html
+           <%= select("ad", "city_id", City.all.collect { |p| [p.name, p.id]}) %>
+	 #+END_SRC
+  28. [ ] file:app/views/ads/index.html.erb
+      #+BEGIN_SRC html
+        <h1>Your Vehicles</h1>
+
+        <table>
+          <tr>
+            <th>Price</th>
+            <th>Vehicle</th>
+            <th>Miles</th>
+            <th>Contact<br />phone</th>
+            <th></th>
+            <th></th>
+          </tr>
+
+          <% @ads.each do |ad| %>
+          <tr>
+            <td style="text-align: right; color:#A0522D;"><%= number_to_currency ad.ad_price, :precision => 0 %></td>
+            <td><%= ad.year %> <%= link_to "#{ad.model.make.name} #{ad.model.name}", ad.ad_url %>, <%= link_to "#{ad.city.name}", "/cities/#{ad.city.id}" %></td>
+            <td style="text-align: right; color:#A0522D; font-style:italic"><%= number_to_human ad.mileage, :precision => 0 %></td>
+            <td><%= ad.contact_phone %></td>
+            <td><%= link_to 'Show', ad %> / <%= link_to 'D', ad, :confirm => 'Are you sure?', :method => :delete %></td>
+          </tr>
+          <% end %>
+        </table>
+
+        <br />
+
+        <%= link_to 'New Ad', new_ad_path %>
+
+        <!-- ad.year -->
+        <!-- ad.model_id -->
+        <!-- ad.mileage -->
+        <!-- ad.isforsale -->
+        <!-- ad.city_id -->
+        <!-- ad.ad_url -->
+        <!-- ad.ad_date -->
+        <!-- ad.ad_price -->
+        <!-- ad.contact_name -->
+        <!-- ad.contact_phone -->
+        <!-- ad.contact_email -->
+        <!-- ad.contact_log -->
+        <!-- ad.notes -->
+      #+END_SRC
